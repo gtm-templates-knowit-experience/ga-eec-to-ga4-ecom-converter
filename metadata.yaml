@@ -1,8 +1,8 @@
 homepage: "https://www.knowit.no/"
-documentation: "https://github.com/Knowit-Experience-MarTech/GTM/GTM-Templates/ga-eec-to-ga4-ecom-converter
+documentation: "https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/"
 "
 versions:
   # Latest version
-  - sha: cd91039cbd30ceb2b487f9d5cb89218c8bf579d0
+  - sha: 1d10088b2aa9b9019f9efc90b9d9721c4ac091d9
     changeNotes: Initial release.
   # Older version
