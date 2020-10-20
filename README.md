@@ -40,6 +40,6 @@ If you have implemented _Product Scoped Dimensions or Metrics_, use this solutio
 Only _dimensions_ or _metrics_ that are mapped will be sent to GA4 Ecommerce. This means that if you have implemented a Product Scoped Custom Dimension, and you don't want data from that dimension sent to GA4, simply don't add the dimension to the table.
 
 ## Images of the Variable Template
-![GA4 Event Settings](https://github.com/EivindSavio/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-event-setting.jpg)
+![GA4 Event Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-event-setting.jpg)
 
-![GA4 Ecommerce Object Settings](https://github.com/EivindSavio/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting.jpg)
+![GA4 Ecommerce Object Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting.jpg)
