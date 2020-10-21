@@ -3,6 +3,6 @@ documentation: "https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4
 "
 versions:
   # Latest version
-  - sha: 1d10088b2aa9b9019f9efc90b9d9721c4ac091d9
+  - sha: 1f440f30fd3447c898b0014779b26f4bf344a126
     changeNotes: Initial release.
   # Older version
