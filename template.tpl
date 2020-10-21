@@ -14,7 +14,7 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "GA Enhanced Ecommerce to GA4 Ecommerce Converter",
-  "description": "This Variable creates either GA4 Events or GA4 Ecommerce Objects based on the Enhanced Ecommerce Object or a Custom Object/Input.",
+  "description": "This Variable creates either GA4 Events or GA4 Ecommerce Objects based on the Enhanced Ecommerce Object. You can also map Product Scoped Dimensions \u0026 Metrics, and create Checkout setup.",
   "categories": ["ANALYTICS", "UTILITY","TAG_MANAGEMENT"],
   "containerContexts": [
     "WEB"
@@ -28,37 +28,7 @@ ___TEMPLATE_PARAMETERS___
   {
     "type": "LABEL",
     "name": "description",
-    "displayName": "This Variable creates either GA4 Events or GA4 Ecommerce objects based on the Enhanced Ecommerce object."
-  },
-  {
-    "type": "SELECT",
-    "name": "selectObjectInput",
-    "displayName": "Select Ecommerce Object Input",
-    "macrosInSelect": false,
-    "selectItems": [
-      {
-        "value": "eecObjectInput",
-        "displayValue": "Enhanced Ecommerce Object"
-      },
-      {
-        "value": "customObjectInput",
-        "displayValue": "Custom Object / Input"
-      }
-    ],
-    "simpleValueType": true
-  },
-  {
-    "type": "TEXT",
-    "name": "customObject",
-    "displayName": "Custom Object / Input",
-    "simpleValueType": true,
-    "enablingConditions": [
-      {
-        "paramName": "selectObjectInput",
-        "paramValue": "customObjectInput",
-        "type": "EQUALS"
-      }
-    ]
+    "displayName": "This Variable creates either GA4 Events or GA4 Ecommerce Objects based on the Enhanced Ecommerce Object."
   },
   {
     "type": "RADIO",
@@ -74,7 +44,32 @@ ___TEMPLATE_PARAMETERS___
         "displayValue": "GA4 Ecommerce Object"
       }
     ],
-    "simpleValueType": true
+    "simpleValueType": true,
+    "help": "Select either GA4 Events or GA4 Ecommerce Object"
+  },
+  {
+    "type": "LABEL",
+    "name": "labelEventBoxes",
+    "displayName": "Tick the boxes below to create GA4 Events.",
+    "enablingConditions": [
+      {
+        "paramName": "dataType",
+        "paramValue": "event",
+        "type": "EQUALS"
+      }
+    ]
+  },
+  {
+    "type": "LABEL",
+    "name": "labelEcomBoxes",
+    "displayName": "Tick the boxes below to create GA4 Ecommerce Items.",
+    "enablingConditions": [
+      {
+        "paramName": "dataType",
+        "paramValue": "ecom",
+        "type": "EQUALS"
+      }
+    ]
   },
   {
     "type": "GROUP",
@@ -174,6 +169,18 @@ ___TEMPLATE_PARAMETERS___
           {
             "paramName": "dataType",
             "paramValue": "event",
+            "type": "EQUALS"
+          }
+        ]
+      },
+      {
+        "type": "LABEL",
+        "name": "checkOutEventLabel",
+        "displayName": "Create GA4 Checkout Events based on the EEC Checkout or Checkout Option object, and Checkout Step Number.",
+        "enablingConditions": [
+          {
+            "paramName": "checkoutActivateEvent",
+            "paramValue": true,
             "type": "EQUALS"
           }
         ]
@@ -282,7 +289,7 @@ ___TEMPLATE_PARAMETERS___
       {
         "type": "SIMPLE_TABLE",
         "name": "renameCDCMTable",
-        "displayName": "Input Dimension/Metric and Output new name",
+        "displayName": "Input Product Scoped Custom Dimension/Metric \u0026 Output  Ecommerce Item Parameters.",
         "simpleTableColumns": [
           {
             "defaultValue": "",
@@ -290,7 +297,12 @@ ___TEMPLATE_PARAMETERS___
             "name": "inputCDCMValue",
             "type": "TEXT",
             "valueHint": "Ex. dimension1",
-            "isUnique": true
+            "isUnique": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
           },
           {
             "defaultValue": "",
@@ -298,9 +310,15 @@ ___TEMPLATE_PARAMETERS___
             "name": "outputItemValue",
             "type": "TEXT",
             "isUnique": true,
-            "valueHint": "Ex. item_rating"
+            "valueHint": "Ex. item_rating",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
           }
-        ]
+        ],
+        "help": "Input Product Scoped Custom Dimension/Metric \u0026 Output Item Parameter. If you have Dimensions or Metrics in your existing implementation that you don\u0027t want to send to GA4, simply just don\u0027t add them."
       }
     ],
     "enablingConditions": [
@@ -318,12 +336,11 @@ ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Require the necessary APIs
 const log = require('logToConsole');
-const queryPermission = require('queryPermission');
 const dataLayer = require('copyFromDataLayer');
 const JSON = require('JSON');
 const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
-let ecommerce = dataLayer('ecommerce', 1); // Data Layer Version 1
+const ecommerce = dataLayer('ecommerce', 1); // Data Layer Version 1
 // Input settings
 const selectObjectInput = data.selectObjectInput;
 const customObject = data.customObject;
@@ -334,10 +351,6 @@ if (renameCDCMTable) {
   newRenameMap = makeTableMap(renameCDCMTable, 'inputCDCMValue', 'outputItemValue');
 }
 const checkoutEventTable = data.checkoutEventTable;
-// If customObject is used, redefine ecom variable
-if (customObject) {
-  ecommerce = customObject;
-}
 
 // GA4 Event Definition
 let view_item_list, view_item, select_item, add_to_cart, remove_from_cart, checkout, checkout_option, purchase, refund, select_promotion, view_promotion;
@@ -583,3 +596,4 @@ scenarios: []
 ___NOTES___
 
 Created on 10/19/2020, 2:11:38 PM
+
