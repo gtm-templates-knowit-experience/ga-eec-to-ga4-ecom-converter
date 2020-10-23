@@ -15,7 +15,7 @@ ___INFO___
   "securityGroups": [],
   "displayName": "GA Enhanced Ecommerce to GA4 Ecommerce Converter",
   "description": "This Variable creates either GA4 Events or GA4 Ecommerce Objects based on the Enhanced Ecommerce Object. You can also map Product Scoped Dimensions \u0026 Metrics, and create Checkout setup.",
-  "categories": ["ANALYTICS", "UTILITY","TAG_MANAGEMENT"],
+  "categories": ["ANALYTICS","UTILITY","TAG_MANAGEMENT"],
   "containerContexts": [
     "WEB"
   ]
@@ -276,25 +276,25 @@ ___TEMPLATE_PARAMETERS___
             "paramValue": true,
             "type": "EQUALS"
           }
-        ]
+        ],
+        "newRowButtonText": "Add Checkout Event"
       }
     ]
   },
   {
     "type": "GROUP",
     "name": "mapProductCDCM",
-    "displayName": "Rename Product Scoped Dimensions \u0026 Metrics",
+    "displayName": "Map Product Scoped Dimensions \u0026 Metrics to Item Parameters",
     "groupStyle": "ZIPPY_OPEN_ON_PARAM",
     "subParams": [
       {
         "type": "SIMPLE_TABLE",
-        "name": "renameCDCMTable",
-        "displayName": "Input Product Scoped Custom Dimension/Metric \u0026 Output  Ecommerce Item Parameters.",
+        "name": "cdMapTable",
         "simpleTableColumns": [
           {
             "defaultValue": "",
-            "displayName": "Input",
-            "name": "inputCDCMValue",
+            "displayName": "Product Scoped Custom Dimension",
+            "name": "cdIndex",
             "type": "TEXT",
             "valueHint": "Ex. dimension1",
             "isUnique": true,
@@ -306,8 +306,8 @@ ___TEMPLATE_PARAMETERS___
           },
           {
             "defaultValue": "",
-            "displayName": "Output",
-            "name": "outputItemValue",
+            "displayName": "Item Parameter Name",
+            "name": "cdParameter",
             "type": "TEXT",
             "isUnique": true,
             "valueHint": "Ex. item_rating",
@@ -318,7 +318,42 @@ ___TEMPLATE_PARAMETERS___
             ]
           }
         ],
-        "help": "Input Product Scoped Custom Dimension/Metric \u0026 Output Item Parameter. If you have Dimensions or Metrics in your existing implementation that you don\u0027t want to send to GA4, simply just don\u0027t add them."
+        "help": "Input Product Scoped Custom Dimension \u0026 Output Item Parameter. If you have Dimensions in your existing implementation that you don\u0027t want to send to GA4, simply just don\u0027t add them.",
+        "newRowButtonText": "Add Product Scoped Custom Dimension"
+      },
+      {
+        "type": "SIMPLE_TABLE",
+        "name": "cmMapTable",
+        "simpleTableColumns": [
+          {
+            "defaultValue": "",
+            "displayName": "Product Scoped Custom Metric",
+            "name": "cmIndex",
+            "type": "TEXT",
+            "valueHint": "Ex. dimension1",
+            "isUnique": true,
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          },
+          {
+            "defaultValue": "",
+            "displayName": "Item Parameter Name",
+            "name": "cmParameter",
+            "type": "TEXT",
+            "isUnique": true,
+            "valueHint": "Ex. item_rating",
+            "valueValidators": [
+              {
+                "type": "NON_EMPTY"
+              }
+            ]
+          }
+        ],
+        "help": "Input Product Scoped Custom Metric \u0026 Output Item Parameter. If you have Metrics in your existing implementation that you don\u0027t want to send to GA4, simply just don\u0027t add them.",
+        "newRowButtonText": "Add Product Scoped Custom Metric"
       }
     ],
     "enablingConditions": [
@@ -335,20 +370,22 @@ ___TEMPLATE_PARAMETERS___
 ___SANDBOXED_JS_FOR_WEB_TEMPLATE___
 
 // Require the necessary APIs
-const log = require('logToConsole');
 const dataLayer = require('copyFromDataLayer');
 const JSON = require('JSON');
 const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
 const ecommerce = dataLayer('ecommerce', 1); // Data Layer Version 1
 // Input settings
-const selectObjectInput = data.selectObjectInput;
-const customObject = data.customObject;
 const dataType = data.dataType;
-const renameCDCMTable = data.renameCDCMTable;
-let newRenameMap;
-if (renameCDCMTable) {
-  newRenameMap = makeTableMap(renameCDCMTable, 'inputCDCMValue', 'outputItemValue');
+const cdMapTable = data.cdMapTable;
+let newCDParameter;
+if (cdMapTable) {
+  newCDParameter = makeTableMap(cdMapTable, 'cdIndex', 'cdParameter');
+}
+const cmMapTable = data.cmMapTable;
+let newCMParameter;
+if (cmMapTable) {
+  newCMParameter = makeTableMap(cmMapTable, 'cmIndex', 'cmParameter');
 }
 const checkoutEventTable = data.checkoutEventTable;
 
@@ -508,19 +545,21 @@ if (eecEcomAction) {
             
             // MAP CUSTOM DIMENSIONS & METRICS
                 // Custom Dimensions
-              if (newRenameMap) {
+              if (newCDParameter) {
                 for (let cd in item) {
                   if (item.hasOwnProperty(cd)) {
-                    if (cd.match("^dimension[0-9]+") && newRenameMap[cd]) {
-                      items[a][newRenameMap[cd]] = item[cd];
+                    if (cd.match("^dimension[0-9]+") && newCDParameter[cd]) {
+                      items[a][newCDParameter[cd]] = item[cd];
                     }
                   }
                }
+              }
                // Custom Metrics
+            if (newCMParameter) {
               for (let cm in item) {
                 if (item.hasOwnProperty(cm)) {
-                  if (cm.match("^metric[0-9]+") && newRenameMap[cm]) {
-                     items[a][newRenameMap[cm]] = item[cm];
+                  if (cm.match("^metric[0-9]+") && newCMParameter[cm]) {
+                     items[a][newCMParameter[cm]] = item[cm];
                   }
                 }
             }
@@ -541,24 +580,6 @@ if (eecEcomAction) {
 ___WEB_PERMISSIONS___
 
 [
-  {
-    "instance": {
-      "key": {
-        "publicId": "logging",
-        "versionId": "1"
-      },
-      "param": [
-        {
-          "key": "environments",
-          "value": {
-            "type": 1,
-            "string": "debug"
-          }
-        }
-      ]
-    },
-    "isRequired": true
-  },
   {
     "instance": {
       "key": {
@@ -596,4 +617,5 @@ scenarios: []
 ___NOTES___
 
 Created on 10/19/2020, 2:11:38 PM
+
 
