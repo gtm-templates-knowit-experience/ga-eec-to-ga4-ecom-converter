@@ -55,6 +55,6 @@ Use **Preview Mode** in Google Tag Manager to verify that Variables, Tags and Tr
 ![GA4 GTM Tag Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga4-gtm-tag-setting.jpg)
 
 ## Images of the Variable Template
-![GA4 Event Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-event-setting.jpg)
+![GA4 Event Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-event-setting.jpg)
 
-![GA4 Ecommerce Object Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting.jpg)
+![GA4 Ecommerce Object Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting.jpg)
