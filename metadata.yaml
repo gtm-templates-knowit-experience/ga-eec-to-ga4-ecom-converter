@@ -2,6 +2,8 @@ homepage: "https://github.com/gtm-templates-knowit-experience/"
 documentation: "https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/"
 versions:
   # Latest version
+  - sha: ca7823ab698c63dbe9b30aff01f164dba453dd11
+    changeNotes: Update to Item Parameter Mapping. Splitted in different tables for Dimensions & Metrics.
+  # Older version
   - sha: 1f440f30fd3447c898b0014779b26f4bf344a126
     changeNotes: Initial release.
-  # Older version
