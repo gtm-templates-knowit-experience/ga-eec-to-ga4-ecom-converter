@@ -1,5 +1,5 @@
 # GA Enhanced Ecommerce to GA4 Ecommerce Converter
-This GTM Variable creates either **GA4 Events** or **GA4 Ecommerce Objects** based on the **Enhanced Ecommerce Object**. You can also map/rename **Product Scoped Dimensions_ & _Metrics**, and map **Enhanced Ecommerce Checkout to GA4 Events** like _add_payment_info_ and _add_shipping_info_.
+This GTM Variable creates either **GA4 Events** or **GA4 Ecommerce Objects** based on the **Enhanced Ecommerce Object**. You can also map/rename **Product Scoped Dimensions & Metrics**, and map **Enhanced Ecommerce Checkout to GA4 Events** like _add_payment_info_ and _add_shipping_info_.
 
 ## Creating GA4 Ecommerce/Retail Events
 Select **GA4 Ecommerce Events** from the _GA4 Data Type_ settings.
@@ -34,7 +34,7 @@ If you have implemented _Product Scoped Dimensions or Metrics_, use this solutio
 
 - In the **Input* field**, enter the dimension or metric. 
   - Ex. _metric1_
-- In the **Output field**, enter the new parameter name.
+- In the **Item Paramenter Name** field, enter the new parameter name.
   - Ex. _discount_
 
 Only _dimensions_ or _metrics_ that are mapped will be sent to GA4 Ecommerce. This means that if you have implemented a Product Scoped Custom Dimension, and you don't want data from that dimension sent to GA4, simply don't add the dimension to the table.
