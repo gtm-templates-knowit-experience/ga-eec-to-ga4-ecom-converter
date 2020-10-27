@@ -540,6 +540,7 @@ if (eecEcomAction) {
 				'quantity': item.quantity,
 				'price': item.price,
 				'item_list_name': item.list ? item.list : undefined,
+				'index': item.position ? makeInteger(item.position) : undefined,
 				'coupon': item.coupon
 			});
             
