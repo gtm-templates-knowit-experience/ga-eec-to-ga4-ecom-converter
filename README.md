@@ -1,5 +1,5 @@
 # GA Enhanced Ecommerce to GA4 Ecommerce Converter
-This GTM Variable creates either **GA4 Events** or **GA4 Ecommerce Objects** based on the **Enhanced Ecommerce Object** or a **Google Tag Manager Variable**. You can also map/rename **Product Scoped Dimensions & Metrics**, and map **Enhanced Ecommerce Checkout to GA4 Events** like _add_payment_info_ and _add_shipping_info_.
+This GTM Variable creates either **GA4 Events** or **GA4 Ecommerce Items** based on the **Enhanced Ecommerce Object** or **Google Tag Manager Variables**. You can also map/rename **Product Scoped Dimensions & Metrics**, and map **Enhanced Ecommerce Checkout to GA4 Events** like _add_payment_info_ and _add_shipping_info_.
 
 ## Creating GA4 Ecommerce/Retail Events
 Select **GA4 Ecommerce Events** from the _GA4 Data Type_ settings.
@@ -39,8 +39,8 @@ If you have implemented _Product Scoped Dimensions or Metrics_, use this solutio
 
 Only _dimensions_ or _metrics_ that are mapped will be sent to GA4 Ecommerce. This means that if you have implemented a Product Scoped Custom Dimension, and you don't want data from that dimension sent to GA4, simply don't add the dimension to the table.
 
-### Creating GA4 Ecommerce Object from GTM Variable
-If you have rewritten your Enhanced Ecommerce object using ex. a _Custom Javascript Variable_, you can create a GA4 Ecommerce object from that Variable.
+### Creating GA4 Ecommerce Items from GTM Variable
+If you have rewritten your Enhanced Ecommerce object using ex. a _Custom Javascript Variable_, you can create GA4 Ecommerce Items from that Variable.
 
 ## GA4 GTM Tag Settings & Triggers
 ### GA4 GTM Tag Settings
@@ -58,6 +58,8 @@ Use **Preview Mode** in Google Tag Manager to verify that Variables, Tags and Tr
 ![GA4 GTM Tag Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga4-gtm-tag-setting.jpg)
 
 ## Images of the Variable Template
-![GA4 Event Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-event-setting-2.jpg)
+### GA4 Event Setup
+![GA4 Event Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-event-setting-3.jpg)
 
-![GA4 Ecommerce Object Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting-2.jpg)
+### GA4 Ecommerce Setup
+![GA4 Ecommerce Object Variable Settings](https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/blob/main/images/ga-eec-to-ga4-ecom-ecommerce-object-setting-3.jpg)
