@@ -14,7 +14,7 @@ ___INFO___
   "version": 1,
   "securityGroups": [],
   "displayName": "GA Enhanced Ecommerce to GA4 Ecommerce Converter",
-  "description": "This Variable creates either GA4 Events or GA4 Ecommerce Objects based on the Enhanced Ecommerce Object. You can also map Product Scoped Dimensions \u0026 Metrics, and create Checkout setup.",
+  "description": "This Variable creates either GA4 Events or GA4 Ecommerce Object based on the Enhanced Ecommerce Object. You can also map Product Scoped Dimensions \u0026 Metrics, and create a Checkout setup.",
   "categories": ["ANALYTICS","UTILITY","TAG_MANAGEMENT"],
   "containerContexts": [
     "WEB"
@@ -46,6 +46,47 @@ ___TEMPLATE_PARAMETERS___
     ],
     "simpleValueType": true,
     "help": "Select either GA4 Events or GA4 Ecommerce Object"
+  },
+  {
+    "type": "GROUP",
+    "name": "eecInputGroup",
+    "groupStyle": "NO_ZIPPY",
+    "subParams": [
+      {
+        "type": "RADIO",
+        "name": "eecInputSelector",
+        "radioItems": [
+          {
+            "value": "ecomDataLayer",
+            "displayValue": "Enhanced Ecommerce DataLayer",
+            "help": "Choose Enhanced Ecommerce Object from \u003cb\u003eDataLayer\u003c/b\u003e"
+          },
+          {
+            "value": "GTMVariable",
+            "displayValue": "GTM Variable",
+            "help": "Choose Enhanced Ecommerce Object from \u003cb\u003eGoogle Tag Manager Variable\u003c/b\u003e."
+          }
+        ],
+        "simpleValueType": true
+      },
+      {
+        "type": "SELECT",
+        "name": "eecGTMVariable",
+        "displayName": "GTM Variable",
+        "macrosInSelect": true,
+        "selectItems": [],
+        "simpleValueType": true,
+        "enablingConditions": [
+          {
+            "paramName": "eecInputSelector",
+            "paramValue": "GTMVariable",
+            "type": "EQUALS"
+          }
+        ]
+      }
+    ],
+    "displayName": "Enhanced Ecommerce Object",
+    "help": "Choose if GA4 Ecommerce data should be created from \u003cb\u003eEnhanced Ecommerce Object from DataLayer\u003c/b\u003e, or from a \u003cb\u003eGTM Variable\u003c/b\u003e. Use the last option if you for example have rewritten your Ecommerce data using a Custom Javascript Variable."
   },
   {
     "type": "LABEL",
@@ -330,7 +371,7 @@ ___TEMPLATE_PARAMETERS___
             "displayName": "Product Scoped Custom Metric",
             "name": "cmIndex",
             "type": "TEXT",
-            "valueHint": "Ex. dimension1",
+            "valueHint": "Ex. metric1",
             "isUnique": true,
             "valueValidators": [
               {
@@ -344,7 +385,7 @@ ___TEMPLATE_PARAMETERS___
             "name": "cmParameter",
             "type": "TEXT",
             "isUnique": true,
-            "valueHint": "Ex. item_rating",
+            "valueHint": "Ex. discount",
             "valueValidators": [
               {
                 "type": "NON_EMPTY"
@@ -374,21 +415,13 @@ const dataLayer = require('copyFromDataLayer');
 const JSON = require('JSON');
 const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
-const ecommerce = dataLayer('ecommerce', 1); // Data Layer Version 1
 // Input settings
+let ecommerce = data.eecGTMVariable ? data.eecGTMVariable : dataLayer('ecommerce', 1); // Data Layer Version 1
+if (JSON.stringify(ecommerce).indexOf('ecommerce')>0) {ecommerce = ecommerce.ecommerce;}
 const dataType = data.dataType;
-const cdMapTable = data.cdMapTable;
-let newCDParameter;
-if (cdMapTable) {
-  newCDParameter = makeTableMap(cdMapTable, 'cdIndex', 'cdParameter');
-}
-const cmMapTable = data.cmMapTable;
-let newCMParameter;
-if (cmMapTable) {
-  newCMParameter = makeTableMap(cmMapTable, 'cmIndex', 'cmParameter');
-}
+const cdMapTable = data.cdMapTable ? makeTableMap(data.cdMapTable, 'cdIndex', 'cdParameter') : undefined;
+const cmMapTable = data.cmMapTable ? makeTableMap(data.cmMapTable, 'cmIndex', 'cmParameter') : undefined;
 const checkoutEventTable = data.checkoutEventTable;
-
 // GA4 Event Definition
 let view_item_list, view_item, select_item, add_to_cart, remove_from_cart, checkout, checkout_option, purchase, refund, select_promotion, view_promotion;
 // PRODUCT
@@ -462,7 +495,7 @@ if (dataType === 'event') {
       'promoClick': select_promotion,
 	  'promoView': view_promotion
   };
-  
+
   // Remove undefined matches
   eecEventMapping = (JSON.parse(JSON.stringify(eecEventMapping)));
   // Grab Current EEC Actions
@@ -470,7 +503,6 @@ if (dataType === 'event') {
 	  if (getKeys(eecEventMapping).indexOf(e) > -1)
 		  return e;
   });
-
   if (ecommerce && eecEventAction) {
       // Set the app_web event action  
 	  return eecEventMapping[eecEventAction];
@@ -492,17 +524,15 @@ if (dataType === 'ecom') {
   ];
   // Remove undefined matches
   eecEcomMapping = (JSON.parse(JSON.stringify(eecEcomMapping)));
-  
+ // Grab Current EEC Actions
   const eecEcomAction = getKeys(ecommerce).filter(function (e) {
 	if (eecEcomMapping.toString().indexOf(e) > -1)
 		return e;
   });
 
 // GA4 ECOMMERCE
-if (eecEcomAction) {
-	
-	if (ecommerce[eecEcomAction]) {
-      
+if (eecEcomAction) {	
+	if (ecommerce[eecEcomAction]) {    
       // GA4 Promotions
       if (ecommerce[eecEcomAction].promotions) {
       if (ecommerce[eecEcomAction].promotions.length>0) {
@@ -517,12 +547,11 @@ if (eecEcomAction) {
               'creative_slot': promo.position
             });
        }
-      return promotions;
-      } else {return undefined;}
+      return promotions || undefined;
+      }
       }
       // GA4 Products
-		let eecEcomProducts = ecommerce[eecEcomAction].products;
-        if (view_item_list) {eecEcomProducts = ecommerce[eecEcomAction];}
+		const eecEcomProducts = view_item_list ? ecommerce[eecEcomAction] : ecommerce[eecEcomAction].products;      
         if (eecEcomProducts.length>0) {
         const items = [];
 		for(let a =0; a < eecEcomProducts.length; a++){
@@ -540,27 +569,27 @@ if (eecEcomAction) {
 				'quantity': item.quantity,
 				'price': item.price,
 				'item_list_name': item.list ? item.list : undefined,
-				'index': item.position ? makeInteger(item.position) : undefined,
+                'index': item.position ? makeInteger(item.position) : undefined,
 				'coupon': item.coupon
 			});
             
             // MAP CUSTOM DIMENSIONS & METRICS
                 // Custom Dimensions
-              if (newCDParameter) {
+              if (cdMapTable) {
                 for (let cd in item) {
                   if (item.hasOwnProperty(cd)) {
-                    if (cd.match("^dimension[0-9]+") && newCDParameter[cd]) {
-                      items[a][newCDParameter[cd]] = item[cd];
+                    if (cd.match("^dimension[0-9]+") && cdMapTable[cd]) {
+                      items[a][cdMapTable[cd]] = item[cd];
                     }
                   }
                }
               }
                // Custom Metrics
-            if (newCMParameter) {
+            if (cmMapTable) {
               for (let cm in item) {
                 if (item.hasOwnProperty(cm)) {
-                  if (cm.match("^metric[0-9]+") && newCMParameter[cm]) {
-                     items[a][newCMParameter[cm]] = item[cm];
+                  if (cm.match("^metric[0-9]+") && cmMapTable[cm]) {
+                     items[a][cmMapTable[cm]] = item[cm];
                   }
                 }
             }
@@ -570,10 +599,9 @@ if (eecEcomAction) {
            // Get Product List
 		if ((ecommerce[eecEcomAction].actionField) && (eecEcomAction == 'add'||eecEcomAction == 'click'||eecEcomAction == 'detail')) {items[0].item_list_name = ecommerce[eecEcomAction].actionField.list || undefined;}
 		
-      return items;
-	} else {return undefined;}
+      return items || undefined;
+	}
     }
-
 }
 }
 
