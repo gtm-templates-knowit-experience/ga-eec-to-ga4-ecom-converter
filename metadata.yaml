@@ -3,7 +3,7 @@ documentation: "https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4
 versions:
   # Latest version
   - sha: ebfa69285ebc0bff1b8212c8e5881ea0a2bd1741
-    changeNotes: Added support for reading Enhanced Ecommerce data from GTM Variable, adjusted some help text and code.
+    changeNotes: Added support for reading Enhanced Ecommerce data from GTM Variable, and adjusted some help text.
   # Older versions
   - sha: 47bc121a549d8fb9dd74ffd7fb01668f183d6270
     changeNotes: Added index to product items.
