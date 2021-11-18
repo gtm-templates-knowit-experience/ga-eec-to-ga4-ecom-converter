@@ -1,6 +1,8 @@
 # GA Enhanced Ecommerce to GA4 Ecommerce Converter
 This GTM Variable creates either **GA4 Events** or **GA4 Ecommerce Items** based on the **Enhanced Ecommerce Object** or **Google Tag Manager Variables**. You can also map/rename **Product Scoped Dimensions & Metrics**, and map **Enhanced Ecommerce Checkout to GA4 Events** like _add_payment_info_ and _add_shipping_info_.
 
+This Template is available in the [**Google Tag Manager Template Gallery**](https://tagmanager.google.com/gallery/#/owners/gtm-templates-knowit-experience/templates/ga-eec-to-ga4-ecom-converter).
+
 ## Creating GA4 Ecommerce/Retail Events
 Select **GA4 Ecommerce Events** from the _GA4 Data Type_ settings.
 
