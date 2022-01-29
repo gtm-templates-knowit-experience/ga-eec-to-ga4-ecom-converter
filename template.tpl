@@ -15,7 +15,11 @@ ___INFO___
   "securityGroups": [],
   "displayName": "GA Enhanced Ecommerce to GA4 Ecommerce Converter",
   "description": "This Variable creates either GA4 Events or GA4 Ecommerce Object based on the Enhanced Ecommerce Object. You can also map Product Scoped Dimensions \u0026 Metrics, and create a Checkout setup.",
-  "categories": ["ANALYTICS","UTILITY","TAG_MANAGEMENT"],
+  "categories": [
+    "ANALYTICS",
+    "UTILITY",
+    "TAG_MANAGEMENT"
+  ],
   "containerContexts": [
     "WEB"
   ]
@@ -417,6 +421,7 @@ const makeInteger = require('makeInteger');
 const makeTableMap = require('makeTableMap');
 // Input settings
 let ecommerce = data.eecGTMVariable ? data.eecGTMVariable : dataLayer('ecommerce', 1); // Data Layer Version 1
+if(ecommerce) {
 if (JSON.stringify(ecommerce).indexOf('ecommerce')>0) {ecommerce = ecommerce.ecommerce;}
 const dataType = data.dataType;
 const cdMapTable = data.cdMapTable ? makeTableMap(data.cdMapTable, 'cdIndex', 'cdParameter') : undefined;
@@ -602,6 +607,7 @@ if (eecEcomAction) {
       return items || undefined;
 	}
     }
+}
 }
 }
 
