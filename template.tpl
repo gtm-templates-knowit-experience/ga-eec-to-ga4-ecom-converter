@@ -564,18 +564,18 @@ if (eecEcomAction) {
 			items.push({
 				'item_id': item.id,
 				'item_name': item.name,
-				'item_variant': item.variant,
-				'item_brand': item.brand,
+				'item_variant': item.variant ? item.variant : undefined,
+				'item_brand': item.brand ? item.brand : undefined,
 				'item_category': (item.category && item.category.split('/')[0]) ? item.category.split('/')[0] : undefined,
 				'item_category2': (item.category && item.category.split('/')[1]) ? item.category.split('/')[1] : undefined,
 				'item_category3': (item.category && item.category.split('/')[2]) ? item.category.split('/')[2] : undefined,
 				'item_category4': (item.category && item.category.split('/')[3]) ? item.category.split('/')[3] : undefined,
 				'item_category5': (item.category && item.category.split('/')[4]) ? item.category.split('/')[4] : undefined,
-				'quantity': item.quantity,
-				'price': item.price,
+				'quantity': item.quantity ? item.quantity : 1,
+				'price': item.price ? item.price : undefined,
 				'item_list_name': item.list ? item.list : undefined,
                 'index': item.position ? makeInteger(item.position) : undefined,
-				'coupon': item.coupon
+				'coupon': item.coupon ? item.coupon : undefined
 			});
             
             // MAP CUSTOM DIMENSIONS & METRICS
