@@ -2,9 +2,11 @@ homepage: "https://github.com/gtm-templates-knowit-experience/"
 documentation: "https://github.com/gtm-templates-knowit-experience/ga-eec-to-ga4-ecom-converter/"
 versions:
   # Latest version
+  - sha: de217e9c1f73e278c7f821a3eaf2c2a6b4ce3ae4
+    changeNotes: Undefined Items values if they don't exist.
+  # Older versions
   - sha: 26906ec729bb30afde0855de9120f17559a9e90f
     changeNotes: Fix of possibility to trigger an script error in the Template Editor.
-  # Older versions
   - sha: ebfa69285ebc0bff1b8212c8e5881ea0a2bd1741
     changeNotes: Added support for reading Enhanced Ecommerce data from GTM Variable, and adjusted some help text.
   - sha: 47bc121a549d8fb9dd74ffd7fb01668f183d6270
